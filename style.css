@@ -1,0 +1,1141 @@
+/* =========================================================
+   OUR LITTLE CORNER — Romantic Memory Website
+   -----------------------------------------------------------
+   Design tokens live here as CSS variables. If you just want
+   to shift the color palette, this is the only place you need
+   to touch — every component below references these variables.
+   ========================================================= */
+
+:root {
+  /* Palette */
+  --color-cream: #fff8f3;
+  --color-blush: #fdebf1;
+  --color-pastel-pink: #f6c9d8;
+  --color-rose: #dd7fa0;
+  --color-rose-deep: #8c1f3a;
+  --color-burgundy: #7a1830;
+  --color-burgundy-deep: #530f21;
+  --color-dark-rose: #6b1626;
+  --color-ink: #4a2c35;
+  --color-ink-soft: #8a6472;
+  --color-white: #ffffff;
+
+  /* A warm gold, used sparingly as an accent alongside the rose/burgundy
+     palette — small touches (dividers, highlights) that lend a more
+     polished, invitation-like warmth without changing the core colors. */
+  --color-gold: #c69a5c;
+  --color-gold-soft: #e8cd9c;
+
+  /* Typography */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: "Caveat", cursive;
+  --font-arabic: "El Messiri", "Cairo", "Segoe UI", Tahoma, sans-serif;
+
+  /* Layout */
+  --max-width: 720px;
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --shadow-soft: 0 20px 50px -20px rgba(122, 51, 72, 0.35);
+  --shadow-card: 0 14px 34px -18px rgba(122, 51, 72, 0.4);
+  /* A fine warm hairline + soft inner glow, layered onto cards below to
+     give them a touch more definition and a subtle "paper" warmth. */
+  --card-edge: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 0 1px rgba(122, 51, 72, 0.06);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------
+   Reset & base
+   --------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Slightly larger base size so all rem-based text throughout the
+     site reads a little more comfortably (was the 16px browser default). */
+  font-size: 17.5px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, var(--color-blush), transparent),
+    radial-gradient(ellipse 70% 40% at 90% 100%, rgba(198, 154, 92, 0.08), transparent),
+    linear-gradient(180deg, var(--color-cream) 0%, var(--color-blush) 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-dark-rose);
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------
+   Arabic / RTL content
+   Any element with dir="rtl" (the love letter, memory
+   messages, quiz text, etc.) picks up the Arabic font and
+   right-aligned reading direction automatically.
+   --------------------------------------------------------- */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+  font-family: var(--font-arabic);
+}
+
+.script-line[dir="rtl"] {
+  font-family: var(--font-arabic);
+  font-weight: 600;
+}
+
+.memory-message[dir="rtl"] {
+  font-family: var(--font-arabic);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.9;
+}
+
+.typewriter-text[dir="rtl"] ~ .typewriter-cursor,
+.letter-body[dir="rtl"] .typewriter-text {
+  line-height: 2;
+}
+
+.quiz-question[dir="rtl"],
+.quiz-feedback[dir="rtl"],
+.quiz-result-message[dir="rtl"] {
+  line-height: 1.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   Buttons
+   --------------------------------------------------------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  overflow: hidden;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+
+/* A soft diagonal sheen that sweeps across primary buttons on hover —
+   a small, tasteful touch that reads as more polished / premium. */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.28) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease);
+}
+
+.btn-primary:hover:not(:disabled)::after {
+  transform: translateX(120%);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-rose-deep) 0%, var(--color-burgundy-deep) 100%);
+  color: var(--color-white);
+  box-shadow: 0 14px 30px -14px rgba(83, 15, 33, 0.55);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px -16px rgba(83, 15, 33, 0.65);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: var(--color-white);
+  color: var(--color-burgundy);
+  border: 1.5px solid var(--color-pastel-pink);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--color-burgundy);
+  transform: translateY(-2px);
+}
+
+/* Memory Previous / Next pills — solid burgundy, sit side by side under the card */
+.btn-memory-nav {
+  flex: 1;
+  justify-content: center;
+  padding: 13px 20px;
+  font-size: 0.95rem;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------
+   Ambient floating hearts / sparkles (decorative, aria-hidden)
+   --------------------------------------------------------- */
+.ambient-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ambient-item {
+  position: absolute;
+  bottom: -10%;
+  opacity: 0.68;
+  animation-name: float-up;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.ambient-item.heart {
+  /* A soft glow in the same rich red gives the hearts a touch more
+     depth without turning them into a heavy, distracting layer. */
+  text-shadow: 0 0 12px rgba(139, 15, 45, 0.28);
+}
+
+.ambient-item.sparkle {
+  opacity: 0.75;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.75;
+  }
+  90% {
+    opacity: 0.62;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(var(--drift, 20px)) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------
+   Generic screen / section layout
+   --------------------------------------------------------- */
+.screen {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  z-index: 1;
+}
+
+.section-inner {
+  width: 100%;
+  max-width: var(--max-width);
+  text-align: center;
+}
+
+.section-title {
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.title-emoji {
+  font-size: 0.85em;
+}
+
+.title-arabic {
+  font-family: var(--font-display);
+  direction: rtl;
+}
+
+/* A slim ornamental divider under every section heading — a small,
+   consistent flourish that gives each section a more finished,
+   invitation-card feel. */
+.section-inner .section-title {
+  position: relative;
+  padding-bottom: 18px;
+}
+
+.section-inner .section-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+.section-subtitle {
+  margin-top: 10px;
+  color: var(--color-ink-soft);
+  font-size: 1.05rem;
+}
+
+/* Reveal-on-scroll animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* main content is hidden entirely until the password unlocks it */
+.main-content.locked {
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   Section 1 — Password screen
+   --------------------------------------------------------- */
+.password-screen {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(246, 201, 216, 0.6), transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(221, 127, 160, 0.35), transparent 50%);
+}
+
+.password-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft), var(--card-edge);
+  padding: 48px 36px;
+  text-align: center;
+  animation: card-in 0.9s var(--ease);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.eyebrow-heart {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+  opacity: 0.85;
+}
+
+/* Profile photo shown above the password form, like a login-screen
+   avatar — framed in a soft gold-to-rose ring with a small heart
+   badge, echoing the site's overall palette. */
+.password-avatar {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 18px;
+}
+
+.password-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-blush);
+  padding: 4px;
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(var(--color-white), var(--color-white)),
+    linear-gradient(135deg, var(--color-gold), var(--color-rose-deep));
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  box-shadow: var(--shadow-card);
+}
+
+.password-avatar-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-rose-deep), var(--color-burgundy-deep));
+  color: var(--color-white);
+  font-size: 0.85rem;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 4px 10px -4px rgba(83, 15, 33, 0.6);
+}
+
+.password-title {
+  font-size: clamp(1.5rem, 5vw, 1.9rem);
+  line-height: 1.3;
+}
+
+.password-subtitle {
+  margin-top: 12px;
+  color: var(--color-ink-soft);
+  font-size: 0.98rem;
+}
+
+.password-form {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-pastel-pink);
+  background: var(--color-white);
+  font-size: 1rem;
+  color: var(--color-ink);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.password-input:focus {
+  border-color: var(--color-rose);
+  box-shadow: 0 0 0 4px rgba(221, 127, 160, 0.18);
+}
+
+.unlock-btn {
+  align-self: center;
+}
+
+.btn-heart {
+  font-size: 1.05em;
+}
+
+.password-hint {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+  min-height: 1.2em;
+}
+
+.password-error {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--color-rose-deep);
+  font-weight: 600;
+  min-height: 1.2em;
+}
+
+.password-card.shake {
+  animation: shake 0.5s var(--ease);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(4px); }
+}
+
+.password-card.unlocking {
+  animation: unlock-pulse 0.7s var(--ease) forwards;
+}
+
+@keyframes unlock-pulse {
+  0% { transform: scale(1); opacity: 1; }
+  60% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1.1); opacity: 0; }
+}
+
+/* ---------------------------------------------------------
+   Floating side navigation (appears once unlocked)
+   --------------------------------------------------------- */
+.side-nav {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 50;
+}
+
+.side-nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(200, 91, 131, 0.28);
+  box-shadow: 0 0 0 0 rgba(198, 154, 92, 0);
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.side-nav-dot:hover {
+  transform: scale(1.25);
+}
+
+.side-nav-dot.active {
+  background: var(--color-rose-deep);
+  transform: scale(1.35);
+  box-shadow: 0 0 0 3px rgba(198, 154, 92, 0.3);
+}
+
+@media (max-width: 680px) {
+  .side-nav {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   Section 2 — Love letter
+   --------------------------------------------------------- */
+.letter-screen {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(246, 201, 216, 0.5), transparent 55%);
+}
+
+.letter-card {
+  max-width: 620px;
+  width: 100%;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft), var(--card-edge);
+  padding: 56px 44px;
+  text-align: left;
+}
+
+.script-line {
+  font-family: var(--font-script);
+  font-size: 2rem;
+  color: var(--color-rose);
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+/* A soft decorative quotation flourish behind the opening line, in the
+   warm gold accent — a small editorial touch, kept subtle. */
+.letter-card {
+  position: relative;
+}
+
+.letter-card::before {
+  content: "“";
+  position: absolute;
+  top: -6px;
+  right: 30px;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  line-height: 1;
+  color: var(--color-gold-soft);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.letter-body {
+  min-height: 220px;
+  position: relative;
+  z-index: 1;
+}
+
+.typewriter-text {
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: var(--color-ink);
+  white-space: pre-wrap;
+  display: inline;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  color: var(--color-rose-deep);
+  animation: blink 0.9s step-end infinite;
+  font-weight: 400;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.next-btn {
+  margin-top: 34px;
+  display: flex;
+}
+
+/* ---------------------------------------------------------
+   Section 3 — بدايتنا / Beginning + counter
+   --------------------------------------------------------- */
+.start-date {
+  margin-top: 6px;
+  font-family: var(--font-script);
+  font-size: 1.6rem;
+  color: var(--color-rose-deep);
+}
+
+.counter-grid {
+  margin: 40px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 480px;
+}
+
+.counter-cell {
+  position: relative;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 22px 8px 18px;
+  box-shadow: var(--shadow-card), var(--card-edge);
+  overflow: hidden;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.counter-cell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-rose-deep), var(--color-gold));
+}
+
+.counter-cell:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px -18px rgba(122, 51, 72, 0.45), var(--card-edge);
+}
+
+.counter-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  color: var(--color-dark-rose);
+  font-variant-numeric: tabular-nums;
+}
+
+.counter-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: var(--color-ink-soft);
+  letter-spacing: 0.02em;
+}
+
+.beginning-note {
+  margin-top: 30px;
+  font-size: 1.05rem;
+  color: var(--color-ink-soft);
+}
+
+/* ---------------------------------------------------------
+   Section 4 — Memories flip card
+   --------------------------------------------------------- */
+.memory-stage {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.memory-nav-row {
+  display: flex;
+  gap: 14px;
+  width: min(440px, 92vw);
+}
+
+.memory-card-wrap {
+  perspective: 1600px;
+  width: min(440px, 92vw);
+  height: min(440px, 92vw);
+}
+
+.memory-card {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  outline: none;
+}
+
+.memory-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s var(--ease);
+  transform-style: preserve-3d;
+}
+
+.memory-card.flipped .memory-card-inner {
+  transform: rotateY(180deg);
+}
+
+.memory-card-wrap.switching .memory-card-inner {
+  transition: none;
+}
+
+.memory-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft), var(--card-edge);
+}
+
+.memory-face-front {
+  background: var(--color-white);
+}
+
+.memory-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.memory-image.is-active {
+  display: block;
+}
+
+.memory-video {
+  background: #000;
+}
+
+.memory-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--color-rose-deep);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+.memory-face-back {
+  position: relative;
+  transform: rotateY(180deg);
+  background: linear-gradient(155deg, var(--color-rose) 0%, var(--color-rose-deep) 55%, var(--color-burgundy-deep) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.memory-face-back::before {
+  /* A large, very soft watermark heart in the background for a bit
+     more romantic depth on the message side of the card. */
+  content: "♥";
+  position: absolute;
+  right: -30px;
+  bottom: -50px;
+  font-size: 13rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.memory-message {
+  position: relative;
+  z-index: 1;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.memory-indicator {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------
+   Section 5 — Playlist
+   --------------------------------------------------------- */
+.playlist-list {
+  margin: 34px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.playlist-item {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card), var(--card-edge);
+  overflow: hidden;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.playlist-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -18px rgba(122, 51, 72, 0.45);
+}
+
+.playlist-item.is-open {
+  transform: none;
+  box-shadow: 0 18px 40px -18px rgba(122, 51, 72, 0.5);
+}
+
+.playlist-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.playlist-index {
+  width: 22px;
+  flex-shrink: 0;
+  text-align: center;
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+
+.playlist-cover {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(198, 154, 92, 0.35);
+}
+
+.playlist-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.playlist-title {
+  font-weight: 600;
+  color: var(--color-ink);
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-artist {
+  margin-top: 2px;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-play {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-blush);
+  color: var(--color-rose-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.playlist-item:hover .playlist-play {
+  background: var(--color-rose);
+  color: var(--color-white);
+  transform: scale(1.06);
+}
+
+.playlist-item.is-open .playlist-play {
+  background: var(--color-rose-deep);
+  color: var(--color-white);
+}
+
+/* The inline player that expands under a song when it's tapped */
+.playlist-player {
+  padding: 0 16px 16px;
+}
+
+.playlist-audio {
+  width: 100%;
+  height: 42px;
+  border-radius: 999px;
+  accent-color: var(--color-rose-deep);
+}
+
+.playlist-embed {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.playlist-no-source {
+  margin: 0;
+  padding: 10px 2px 2px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-ink-soft);
+}
+
+/* ---------------------------------------------------------
+   Section 6/7 — Quiz + result
+   --------------------------------------------------------- */
+.quiz-card {
+  margin-top: 30px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft), var(--card-edge);
+  padding: 40px 34px;
+  text-align: left;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.quiz-progress {
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: var(--color-rose-deep);
+  font-weight: 600;
+}
+
+.quiz-question {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--color-ink);
+  line-height: 1.45;
+}
+
+.quiz-options {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quiz-option {
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-pastel-pink);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-size: 0.98rem;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.15s var(--ease);
+}
+
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--color-rose);
+  transform: translateY(-1px);
+}
+
+.quiz-option:disabled {
+  cursor: default;
+}
+
+.quiz-option.selected-correct {
+  background: #fbf3e4;
+  border-color: var(--color-gold);
+  color: #7a5a22;
+  font-weight: 600;
+}
+
+.quiz-option.selected-wrong {
+  background: #fbebe9;
+  border-color: #c17a6e;
+  color: #93412f;
+  font-weight: 600;
+}
+
+.quiz-option.reveal-correct {
+  border-color: var(--color-gold);
+}
+
+.quiz-feedback {
+  margin-top: 16px;
+  min-height: 1.4em;
+  font-weight: 600;
+  color: var(--color-rose-deep);
+}
+
+.quiz-next-btn {
+  margin-top: 22px;
+  align-self: flex-end;
+}
+
+.quiz-result-view {
+  text-align: center;
+}
+
+.quiz-result-view.hidden {
+  display: none;
+}
+
+.quiz-question-view.hidden {
+  display: none;
+}
+
+.quiz-result-score {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  color: var(--color-dark-rose);
+}
+
+.quiz-result-message {
+  margin-top: 14px;
+  font-size: 1.05rem;
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.quiz-result-view .btn {
+  margin-top: 26px;
+}
+
+/* ---------------------------------------------------------
+   Confetti canvas
+   --------------------------------------------------------- */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   Responsive tweaks
+   --------------------------------------------------------- */
+@media (max-width: 560px) {
+  html {
+    /* Keep the comfier reading size, but ease it back slightly on
+       small screens so nothing wraps awkwardly. */
+    font-size: 16.5px;
+  }
+
+  .letter-card {
+    padding: 40px 26px;
+  }
+
+  .quiz-card {
+    padding: 30px 22px;
+  }
+
+  .counter-grid {
+    gap: 10px;
+  }
+
+  .counter-cell {
+    padding: 16px 6px;
+  }
+
+  .memory-stage {
+    gap: 16px;
+  }
+
+  .btn-memory-nav {
+    padding: 12px 14px;
+    font-size: 0.88rem;
+  }
+
+  .password-card {
+    padding: 38px 24px;
+  }
+}
